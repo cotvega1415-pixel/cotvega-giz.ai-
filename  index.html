@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cotvega GIZ AI Demo</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0f0f0f;
+      color: #fff;
+      display: flex;
+    }
+    .sidebar {
+      width: 200px;
+      background-color: #1c1c1c;
+      padding: 20px;
+    }
+    .sidebar h2 {
+      color: #f0f;
+    }
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+    .sidebar li {
+      margin: 15px 0;
+      cursor: pointer;
+    }
+    .main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      padding: 40px;
+    }
+    .tile {
+      background-color: #222;
+      border-radius: 10px;
+      padding: 30px;
+      text-align: center;
+      font-size: 1.2em;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+    .tile:hover {
+      background-color: #333;
+      transform: scale(1.05);
+    }
+    .plugin-box {
+      position: fixed;
+      top: 10%;
+      left: 25%;
+      width: 50%;
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 10px;
+      color: #fff;
+      z-index: 999;
+      box-shadow: 0 0 20px #6a00ff;
+    }
+    .plugin-box input, .plugin-box button {
+      margin: 10px 0;
+      padding: 10px;
+      width: 100%;
+      border-radius: 5px;
+      border: none;
+    }
+    .plugin-box button {
+      background-color: #6a00ff;
+      color: white;
+      cursor: pointer;
+    }
+    .loading {
+      animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.5; }
+      50% { opacity: 1; }
+      100% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Cotvega GIZ AI</h2>
+    <ul>
+      <li>Dashboard</li>
+      <li>Drive</li>
+      <li>Notes</li>
+      <li>Chats</li>
+      <li>Plugins</li>
+    </ul>
+  </div>
+
+  <div class="main">
+    <div class="tile" onclick="launchPlugin('video')">🎥 AI VIDEO GENERATOR</div>
+    <div class="tile">🎮 AI GAME GENERATOR</div>
+    <div class="tile">🎶 AI SONG COMPOSER</div>
+    <div class="tile">🎨 MESH MOTION STUDIO</div>
+    <div class="tile">🤝 COMMUNITY COLLAB MODE</div>
+    <div class="tile">📁 NOTES & DRIVE</div>
+  </div>
+
+  <script>
+    function launchPlugin(type) {
+      if (type === 'video') {
+        const pluginHTML = `
+          <div class="plugin-box" id="videoPlugin">
+            <h3>🎥 AI Video Generator</h3>
+            <input type="text" id="video-text" placeholder="Enter video prompt..." />
+            <input type="file" id="video-image" accept="image/*" />
+            <button onclick="generateVideo()">Generate Video</button>
+            <div id="video-preview"></div>
+            <button onclick="closePlugin()">Close</button>
+          </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', pluginHTML);
+      }
+    }
+
+    function generateVideo() {
+      const text = document.getElementById('video-text').value.trim();
+      const image = document.getElementById('video-image').files[0];
+      const previewArea = document.getElementById('video-preview');
+
+      if (!text && !image) {
+        alert("Please provide text or image to generate video.");
+        return;
+      }
+
+      previewArea.innerHTML = `<div class="loading">🎬 Generating video...</div>`;
+
+      setTimeout(() => {
+        previewArea.innerHTML = `
+          <video controls width="100%">
+            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <p class="caption">Demo video generated from: ${text || image.name}</p>
+        `;
+      }, 3000);
+    }
+
+    function closePlugin() {
+      const plugin = document.getElementById('videoPlugin');
+      if (plugin) plugin.remove();
+    }
+  </script>
+</body>
+</html>
