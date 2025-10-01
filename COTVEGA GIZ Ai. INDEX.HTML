@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COTVEGA Giz AI + OCV Coin Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        *{ font-family: 'Inter', sans-serif; }
+        body { background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 30%, #7c3aed 60%, #db2777 80%, #dc2626 100%); }
+        .card-glow { box-shadow: 0 0 40px 0 rgba(139,92,246,0.35), 0 2px 16px rgba(0,0,0,0.14); }
+        .glow-btn { box-shadow: 0 0 12px 3px #fbbf2422, 0 0 2px 1px #fbbf24; }
+        .glow-btn:hover { box-shadow: 0 0 25px 8px #fbbf24bb, 0 0 6px 2px #fbbf24; background: linear-gradient(90deg, #ffe066, #fbbf24);}
+        .title-glow { text-shadow: 0 2px 16px #fbbf24, 0 1px 4px #fff; }
+        .section { background: rgba(29,29,44,0.75); border-radius: 1.2rem; box-shadow: 0 0 40px #7c3aed44; margin-bottom: 2rem;}
+        .modal-bg { background: rgba(21,21,33,0.85); }
+        .input-glow:focus { border-color: #fbbf24; box-shadow: 0 0 10px 2px #fbbf24; }
+        .nav-glow { box-shadow: 0 0 32px #7c3aed88; }
+        .profile-pic { box-shadow: 0 0 14px #feca57; }
+        .active-tab { background: linear-gradient(90deg, #fbbf24 20%, #fff 80%); color: #222; font-weight: bold;}
+    </style>
+</head>
+<body class="min-h-screen text-white">
+    <!-- Navigation -->
+    <nav class="nav-glow bg-gray-900/90 py-4 mb-6 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto flex items-center justify-between px-6">
+            <h1 class="text-3xl md:text-4xl font-black bg-gradient-to-r from-yellow-400 via-white to-yellow-400 bg-clip-text text-transparent title-glow">COTVEGA Giz AI</h1>
+            <div class="flex gap-4">
+                <button class="rounded px-4 py-2 glow-btn" onclick="showTab('dashboard')">Dashboard</button>
+                <button class="rounded px-4 py-2 glow-btn" onclick="showTab('marketplace')">Marketplace</button>
+                <button class="rounded px-4 py-2 glow-btn" onclick="showTab('profile')">Profile</button>
+                <button class="rounded px-4 py-2 glow-btn" onclick="showTab('leaderboard')">Leaderboard</button>
+                <button class="rounded px-4 py-2 glow-btn" onclick="showTab('chatbot')">Chatbot</button>
+                <button class="rounded px-4 py-2 glow-btn" onclick="showTab('forum')">Forum</button>
+                <button class="rounded px-4 py-2 glow-btn" onclick="showTab('admin')">Admin</button>
+                <button class="rounded px-4 py-2 glow-btn" onclick="toggleLang()">🌐 বাংলা</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- OCV Coin Balance & Notification -->
+    <div class="max-w-7xl mx-auto mb-6 flex justify-between items-center px-6">
+        <div class="ocv-coin-balance card-glow flex items-center gap-4 bg-yellow-400/10 px-5 py-2 rounded-lg">
+            🪙 OCV Coins: <span id="ocv-balance">150</span>
+            <button class="glow-btn px-3 py-1 rounded" onclick="buyOcvCoins()">Buy Coins</button>
+        </div>
+        <div id="notificationBox" class="bg-yellow-400/30 px-4 py-2 rounded-lg card-glow text-yellow-200 font-bold hidden"></div>
+    </div>
+
+    <!-- Main Content Tabs -->
+    <div id="dashboard" class="section max-w-7xl mx-auto px-6 py-8">
+        <h2 class="text-3xl font-bold mb-5 title-glow">AI Feature Tiles</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+            <div class="dashboard-tile bg-gray-800 rounded-2xl p-8 text-center card-glow cursor-pointer" onclick="launchPlugin('video')">
+                <span class="text-4xl mb-2">🎬</span>
+                <h3 class="text-2xl font-bold mb-2">AI Video Generator</h3>
+                <p>Create videos from text/images. <span style="color:#fbbf24;">Unlock with OCV Subscription!</span></p>
+                <button class="glow-btn mt-4 px-4 py-2 rounded" onclick="buyCotvegaSubscription(event)">Subscribe 50 OCV</button>
+            </div>
+            <div class="dashboard-tile bg-gray-800 rounded-2xl p-8 text-center card-glow cursor-pointer" onclick="showComingSoon('AI Game Generator')">
+                <span class="text-4xl mb-2">🎮</span>
+                <h3 class="text-2xl font-bold mb-2">AI Game Generator</h3>
+                <p>Generate interactive games. <span style="color:#fbbf24;">Unlock with OCV!</span></p>
+            </div>
+            <div class="dashboard-tile bg-gray-800 rounded-2xl p-8 text-center card-glow cursor-pointer" onclick="showComingSoon('AI Song Composer')">
+                <span class="text-4xl mb-2">🎵</span>
+                <h3 class="text-2xl font-bold mb-2">AI Song Composer</h3>
+                <p>Compose music with AI. <span style="color:#fbbf24;">Marketplace Item!</span></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Marketplace Tab -->
+    <div id="marketplace" class="section max-w-7xl mx-auto px-6 py-8 hidden">
+        <h2 class="text-3xl font-bold mb-8 text-yellow-400 title-glow text-center">Marketplace & Subscription</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-gray-900 rounded-xl p-6 card-glow flex flex-col items-start gap-4">
+                <span>🎫 Cotvega Giz AI Subscription</span>
+                <button class="glow-btn px-4 py-2 rounded" onclick="buyCotvegaSubscription(event)">Buy for 50 OCV</button>
+            </div>
+            <div class="bg-gray-900 rounded-xl p-6 card-glow flex flex-col items-start gap-4">
+                <span>🖼️ AI Art Pack</span>
+                <button class="glow-btn px-4 py-2 rounded" onclick="buyItem('AI Art Pack', 30)">Buy for 30 OCV</button>
+            </div>
+            <div class="bg-gray-900 rounded-xl p-6 card-glow flex flex-col items-start gap-4">
+                <span>🎵 Song Credits</span>
+                <button class="glow-btn px-4 py-2 rounded" onclick="buyItem('Song Credits', 20)">Buy for 20 OCV</button>
+            </div>
+            <div class="bg-gray-900 rounded-xl p-6 card-glow flex flex-col items-start gap-4">
+                <span>📚 Course Access</span>
+                <button class="glow-btn px-4 py-2 rounded" onclick="buyItem('Course Access', 15)">Buy for 15 OCV</button>
+            </div>
+        </div>
+        <!-- Transaction History -->
+        <div class="bg-gray-900 rounded-xl p-6 card-glow mt-12">
+            <h3 class="text-2xl font-bold mb-4 text-yellow-400">Transaction History</h3>
+            <ul id="transactionList" class="space-y-2 text-white"></ul>
+        </div>
+    </div>
+
+    <!-- Profile Tab -->
+    <div id="profile" class="section max-w-7xl mx-auto px-6 py-8 hidden">
+        <h2 class="text-3xl font-bold mb-5 title-glow">User Profile</h2>
+        <div class="flex flex-col md:flex-row gap-8 items-center">
+            <img src="https://i.pravatar.cc/120?img=3" class="profile-pic w-32 h-32 rounded-full mb-4 md:mb-0" id="profilePic">
+            <div>
+                <div class="mb-2">
+                    <label class="block text-sm font-medium mb-1">Username</label>
+                    <input type="text" id="username" value="cotvega1415-pixel" class="input-glow px-4 py-2 rounded bg-gray-700 text-white w-64">
+                </div>
+                <div class="mb-2">
+                    <label class="block text-sm font-medium mb-1">Email</label>
+                    <input type="email" id="email" value="cotvega@email.com" class="input-glow px-4 py-2 rounded bg-gray-700 text-white w-64">
+                </div>
+                <div class="mb-2">
+                    <label class="block text-sm font-medium mb-1">Phone</label>
+                    <input type="tel" id="phone" value="+8801234567890" class="input-glow px-4 py-2 rounded bg-gray-700 text-white w-64">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-1">Language</label>
+                    <select id="language" class="px-4 py-2 rounded bg-gray-700 text-white w-64">
+                        <option value="en">English</option>
+                        <option value="bn">বাংলা</option>
+                    </select>
+                </div>
+                <button class="glow-btn px-4 py-2 rounded" onclick="updateProfile()">Update Profile</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboard Tab -->
+    <div id="leaderboard" class="section max-w-7xl mx-auto px-6 py-8 hidden">
+        <h2 class="text-3xl font-bold mb-5 title-glow">Leaderboard</h2>
+        <div class="bg-gray-900 rounded-xl p-6 card-glow">
+            <table class="w-full text-left">
+                <thead>
+                    <tr class="text-yellow-400 bg-gray-800">
+                        <th class="py-2 px-2">Rank</th>
+                        <th class="py-2 px-2">User</th>
+                        <th class="py-2 px-2">Coins</th>
+                        <th class="py-2 px-2">Campaigns</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboardBody" class="text-white"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Chatbot Tab -->
+    <div id="chatbot" class="section max-w-7xl mx-auto px-6 py-8 hidden">
+        <h2 class="text-3xl font-bold mb-5 title-glow">AI Chatbot Assistant</h2>
+        <div class="bg-gray-900 rounded-xl p-6 card-glow">
+            <div id="chatWindow" class="mb-4 space-y-2"></div>
+            <div class="flex gap-2">
+                <input type="text" id="chatInput" class="input-glow flex-1 px-4 py-2 rounded bg-gray-700 text-white" placeholder="Type your question...">
+                <button class="glow-btn px-4 py-2 rounded" onclick="sendChat()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forum Tab -->
+    <div id="forum" class="section max-w-7xl mx-auto px-6 py-8 hidden">
+        <h2 class="text-3xl font-bold mb-5 title-glow">Community Forum</h2>
+        <div class="bg-gray-900 rounded-xl p-6 card-glow">
+            <div id="forumList" class="space-y-2 mb-4"></div>
+            <div class="flex gap-2">
+                <input type="text" id="forumInput" class="input-glow flex-1 px-4 py-2 rounded bg-gray-700 text-white" placeholder="Share your thoughts/question...">
+                <button class="glow-btn px-4 py-2 rounded" onclick="addForumPost()">Post</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Tab -->
+    <div id="admin" class="section max-w-7xl mx-auto px-6 py-8 hidden">
+        <h2 class="text-3xl font-bold mb-5 title-glow">Admin Panel</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-gray-900 rounded-xl p-6 card-glow">
+                <h3 class="text-xl font-bold mb-4 text-yellow-400">Platform Stats</h3>
+                <div class="space-y-2">
+                    <div>Total Users: <span id="statUsers">24,789</span></div>
+                    <div>Active Campaigns: <span id="statCampaigns">1,247</span></div>
+                    <div>Total Volume: <span id="statVolume">$2.4M</span></div>
+                    <div>OCV in Circulation: <span id="statOCV">8,934 / 9,999</span></div>
+                </div>
+            </div>
+            <div class="bg-gray-900 rounded-xl p-6 card-glow">
+                <h3 class="text-xl font-bold mb-4 text-blue-400">Coin Management</h3>
+                <button class="glow-btn px-4 py-2 rounded mb-2" onclick="buyOcvCoins()">Mint OCV</button>
+                <button class="glow-btn px-4 py-2 rounded mb-2" onclick="freezeTrading()">Freeze Trading</button>
+            </div>
+            <div class="bg-gray-900 rounded-xl p-6 card-glow">
+                <h3 class="text-xl font-bold mb-4 text-green-400">Revenue Analytics</h3>
+                <div>Today's Revenue: <span class="text-green-400">$12,847</span></div>
+                <div>Ad Spend: <span class="text-blue-400">$8,234</span></div>
+                <div>Affiliate Payouts: <span class="text-yellow-400">$1,892</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Video Generator Modal -->
+    <div id="videoModal" class="fixed inset-0 modal-bg hidden flex items-center justify-center z-50">
+        <div class="bg-gray-800 rounded-2xl p-8 max-w-md w-full mx-4 card-glow relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl">×</button>
+            <h3 class="text-2xl font-bold mb-6 text-yellow-400">🎬 AI Video Generator</h3>
+            <div>
+                <label class="block text-sm font-medium mb-2 text-white">Video Prompt</label>
+                <textarea id="videoPrompt" rows="3" class="w-full px-4 py-3 bg-gray-700 border rounded-lg text-white mb-4" placeholder="Describe your video idea..."></textarea>
+            </div>
+            <div>
+                <label class="block text-sm font-medium mb-2 text-white">Reference Image</label>
+                <input type="file" id="videoImage" accept="image/*" class="w-full px-4 py-2 bg-gray-700 border rounded-lg text-white mb-4">
+            </div>
+            <button class="glow-btn w-full mb-2 px-4 py-2 rounded" onclick="generateVideo()">Generate Video</button>
+            <div id="videoResult" style="display:none;" class="mt-4 text-center">
+                <video controls width="100%">
+                    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+                <p class="mt-2 text-yellow-400">Demo video generated!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Logic
+        function showTab(tab) {
+            document.querySelectorAll('.section').forEach(e => e.classList.add('hidden'));
+            document.getElementById(tab).classList.remove('hidden');
+        }
+        // Initial tab
+        showTab('dashboard');
+
+        // OCV Logic
+        let ocvBalance = 150;
+        let subscriptionActive = false;
+        let transactions = [];
+        let language = 'en';
+
+        function updateOcvBalance() {
+            document.getElementById('ocv-balance').innerText = ocvBalance;
+        }
+
+        function notify(msg) {
+            let box = document.getElementById('notificationBox');
+            box.innerText = msg;
+            box.classList.remove('hidden');
+            setTimeout(()=>{ box.classList.add('hidden'); }, 3000);
+        }
+
+        function buyOcvCoins() {
+            ocvBalance += 50;
+            updateOcvBalance();
+            notify(language === 'bn' ? 'আপনি ৫০ OCV কয়েন কিনেছেন!' : 'You bought 50 OCV coins!');
+            addTransaction('Bought 50 OCV', 50);
+        }
+
+        function buyCotvegaSubscription(e) {
+            if (e) e.stopPropagation();
+            if (subscriptionActive) {
+                notify(language === 'bn' ? 'সাবস্ক্রিপশন ইতোমধ্যে অ্যাক্টিভ!' : 'Subscription already active!');
+                return;
+            }
+            if (ocvBalance >= 50) {
+                ocvBalance -= 50;
+                subscriptionActive = true;
+                updateOcvBalance();
+                notify(language === 'bn' ? 'সাবস্ক্রিপশন চালু হয়েছে!' : 'Subscription Activated!');
+                addTransaction('Cotvega Subscription', -50);
+            } else {
+                notify(language === 'bn' ? 'যথেষ্ট কয়েন নেই!' : 'Not enough OCV coins!');
+            }
+        }
+
+        function buyItem(item, price) {
+            if (ocvBalance >= price) {
+                ocvBalance -= price;
+                updateOcvBalance();
+                notify(`${item} purchased for ${price} OCV coins!`);
+                addTransaction(item, -price);
+            } else {
+                notify('Not enough OCV coins!');
+            }
+        }
+
+        function addTransaction(item, amount) {
+            transactions.unshift({
+                item, amount, time: new Date().toLocaleString()
+            });
+            renderTransactions();
+        }
+
+        function renderTransactions() {
+            let list = document.getElementById('transactionList');
+            if (!list) return;
+            list.innerHTML = transactions.map(t =>
+                `<li class="border-b border-gray-700 py-1">${t.time}: <span class="font-bold">${t.item}</span> <span class="text-yellow-400">${t.amount > 0 ? '+' : ''}${t.amount} OCV</span></li>`
+            ).join('');
+        }
+
+        // Video Plugin
+        function launchPlugin(type) {
+            if (!subscriptionActive) {
+                notify(language === 'bn' ? 'সাবস্ক্রিপশন কিনুন!' : 'Please buy subscription to access!');
+                return;
+            }
+            if (type === 'video') {
+                document.getElementById('videoModal').classList.remove('hidden');
+            }
+        }
+        function generateVideo() {
+            const text = document.getElementById('videoPrompt').value.trim();
+            const image = document.getElementById('videoImage').files[0];
+            if (!text && !image) {
+                notify(language === 'bn' ? 'ভিডিও আইডিয়া দিন!' : "Please provide text or image!");
+                return;
+            }
+            document.getElementById('videoResult').style.display = 'block';
+            addTransaction('AI Video Generated', -5);
+        }
+        function closeModal() {
+            document.getElementById('videoModal').classList.add('hidden');
+            document.getElementById('videoResult').style.display = 'none';
+            document.getElementById('videoPrompt').value = '';
+            document.getElementById('videoImage').value = '';
+        }
+        document.getElementById('videoModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Coming Soon
+        function showComingSoon(feature) {
+            notify(`🚀 ${feature} is coming soon!`);
+        }
+
+        // Profile Update
+        function updateProfile() {
+            notify(language === 'bn' ? 'প্রোফাইল আপডেট হয়েছে!' : 'Profile updated!');
+        }
+
+        // Language Toggle
+        function toggleLang() {
+            language = language === 'en' ? 'bn' : 'en';
+            notify(language === 'bn' ? 'ভাষা পরিবর্তন হয়েছে!' : 'Language changed!');
+            document.getElementById('language').value = language;
+        }
+
+        // Leaderboard Data
+        const leaderboardData = [
+            {user: 'cotvega1415-pixel', coins: 1500, campaigns: 120},
+            {user: 'pixelmaster', coins: 1100, campaigns: 95},
+            {user: 'aiwizard', coins: 950, campaigns: 80},
+            {user: 'creativegamer', coins: 900, campaigns: 75},
+            {user: 'songbird', coins: 850, campaigns: 70}
+        ];
+        function renderLeaderboard() {
+            document.getElementById('leaderboardBody').innerHTML =
+                leaderboardData.map((u,i) => `
+                  <tr>
+                    <td class="py-2 px-2">${i+1}</td>
+                    <td class="py-2 px-2">${u.user}</td>
+                    <td class="py-2 px-2 text-yellow-400">${u.coins}</td>
+                    <td class="py-2 px-2">${u.campaigns}</td>
+                  </tr>
+                `).join('');
+        }
+        renderLeaderboard();
+
+        // Chatbot Demo
+        function sendChat() {
+            let input = document.getElementById('chatInput').value.trim();
+            if (!input) return;
+            let win = document.getElementById('chatWindow');
+            win.innerHTML += `<div class="bg-blue-800/80 rounded px-4 py-2 max-w-lg">${input}</div>`;
+            setTimeout(()=> {
+                let reply = chatbotReply(input);
+                win.innerHTML += `<div class="bg-gray-700/80 rounded px-4 py-2 max-w-lg ml-auto text-right">${reply}</div>`;
+                win.scrollTop = win.scrollHeight;
+            }, 600);
+            document.getElementById('chatInput').value = '';
+        }
+        function chatbotReply(msg) {
+            msg = msg.toLowerCase();
+            if (msg.includes('coin')) return "You can buy, spend, and earn OCV coins from the marketplace!";
+            if (msg.includes('profile')) return "Go to Profile tab to edit your info.";
+            if (msg.includes('video')) return "To generate video, please subscribe first!";
+            if (msg.includes('help')) return "Ask me anything about Cotvega Giz AI or OCV coins!";
+            if (msg.includes('leaderboard')) return "Leaderboard shows top users with most coins and campaigns.";
+            return "Sorry, I didn't understand. Please ask again!";
+        }
+
+        // Forum Demo
+        let forumPosts = [
+            {user:"cotvega1415-pixel", text:"How do I unlock AI Game Generator?"},
+            {user:"aiwizard", text:"Cotvega subscription is cool!"},
+        ];
+        function renderForum() {
+            let list = document.getElementById('forumList');
+            list.innerHTML = forumPosts.map(f=>`<div class="bg-gray-800/80 rounded px-4 py-2"><b>${f.user}:</b> ${f.text}</div>`).join('');
+        }
+        function addForumPost() {
+            let input = document.getElementById('forumInput').value.trim();
+            if (!input) return;
+            forumPosts.unshift({user:'You', text:input});
+            renderForum();
+            document.getElementById('forumInput').value = '';
+        }
+        renderForum();
+
+        // Admin
+        function freezeTrading() {
+            notify('Trading has been frozen for security!');
+        }
+
+        // On load
+        document.addEventListener('DOMContentLoaded', ()=>{
+            updateOcvBalance();
+            renderTransactions();
+        });
+    </script>
+</body>
+</html>
